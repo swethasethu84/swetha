@@ -1,0 +1,17 @@
+---
+- name: create users and passwd
+  hosts: all
+  become: yes
+  tasks:
+    - name: create sudo group 
+      group:
+        name: sudo
+        state: present
+
+    - name: Create ansible_user with psswrd
+      user:
+        name: ansible_user
+        password: "{{ 'ansible123' | password_hash('sha512') }}"
+        groups: sudo
+        append: yes
+        state: present

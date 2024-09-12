@@ -1,0 +1,51 @@
+---
+- name: Uninstall servers and clean up in Ubuntu
+  hosts: ubuntu
+  become: yes
+  vars:
+    software_package_list:
+      - nginx
+      - apache2
+      - mysql-server
+    software_packages_without_services:
+      - default-jdk
+      - python3.11
+  tasks:
+    - name: Remove deadsnakes PPA repository
+      apt_repository:
+        repo: ppa:deadsnakes/ppa
+        state: absent
+
+    - name: Stop and disable services managed by systemd
+      systemd:
+        name: "{{ item }}"
+        state: stopped
+        enabled: no
+      loop: "{{ software_package_list }}"
+      ignore_errors: yes
+
+    - name: Stop and disable services managed by init scripts
+      service:
+        name: "{{ item }}"
+        state: stopped
+        enabled: no
+      loop: "{{ software_package_list }}"
+      when: ansible_service_mgr == 'init'
+      ignore_errors: yes
+
+    - name: Purge software packages (remove with configuration)
+      apt:
+        name: "{{ item }}"
+        state: absent
+        purge: yes
+        update_cache: yes
+      loop: "{{ software_package_list + software_packages_without_services }}"
+
+    - name: Remove unused dependencies
+      apt:
+        autoremove: yes
+        purge: yes
+
+    - name: Clean up package cache
+      apt:
+        autoclean: yes

@@ -1,0 +1,26 @@
+---
+- name: update index.html
+  hosts: all
+  become: yes
+  tasks:
+    - name: copy source file to servers
+      copy:
+        src: /root/index.html
+        dest: /var/www/html
+        owner: root
+        group: root
+        mode: 0644
+      notify:
+        - Restart apache in ubuntu
+        - Restart apache in amazon
+  handlers:
+    - name: Restart apache in ubuntu
+      when: ansible_distribution == "Ubuntu"
+      service:
+        name: apache2
+        state: restarted
+    - name: Restart apache in amazon
+      when: ansible_distribution == "Amazon"
+      service:
+        name: httpd
+        state: restarted 

@@ -1,0 +1,14 @@
+---
+- name: create file in remote
+  hosts: all
+  become: yes
+  tasks:
+    - name: create an empty file
+      file:
+        path: /root/welcome.txt
+        state: touch
+    - name: add content to the file
+      lineinfile:
+          path: /root/welcome.txt
+          line: Hello, Ansible!
+          state: present

@@ -1,0 +1,31 @@
+---
+- name: install software packages
+  hosts: ubuntu
+  become: yes
+  vars: 
+    software_package_list:
+      - nginx
+      - default-jdk
+      - python3.11
+      - mysql-server
+      - apache2
+    apache_state: "present"  
+  tasks:
+    - name: Add deadsnakes PPA repository
+      apt_repository:
+        repo: ppa:deadsnakes/ppa
+        state: present
+    - name: Install software packages
+      apt:
+        name: "{{ item }}"
+        update_cache: yes
+        state: present
+      loop: "{{ software_package_list }}"
+      when: apache_state == "present"
+    - name: Uninstall Apache package
+      apt:
+        name: apache2
+        state: absent
+      when: apache_state == "absent"
+
+      

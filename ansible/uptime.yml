@@ -1,0 +1,12 @@
+---
+- name: Run uptime 
+  hosts: all
+  gather_facts: no
+  tasks:
+    - name: Execute uptime command
+      shell: uptime
+      register: uptime_output
+
+    - name: Display uptime output
+      debug:
+        var: uptime_output.stdout

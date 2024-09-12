@@ -1,0 +1,25 @@
+---
+- name: Update Linux Kernel
+  hosts: all
+  become: yes
+  tasks:
+    - name: Show kernel version
+      command: uname -r
+      #save result from above command
+      register: kernel_version 
+
+    - name: Display Linux Kernel Version
+      #debug module is used to print message from register key-word
+      debug:  
+        msg: "The Linux kernel version is {{ kernel_version.stdout }}"
+
+    - name: Update Ubuntu kernel
+      apt:
+        name: linux-image-generic
+        state: latest
+      when: ansible_distribution == 'Ubuntu'
+    - name: Update Amazon Linux kernel
+      dnf:
+        name: kernel
+        state: latest
+      when: ansible_distribution == 'Amazon'

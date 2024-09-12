@@ -1,0 +1,28 @@
+version: '3'
+services:
+  swe1server:
+    image: httpd:latest
+    container_name: swe1server
+    volumes:
+      - swe1-data:/usr/local/apache2/htdocs
+    networks:
+      - swethanet
+
+  swe2server:
+    image: mysql:latest
+    container_name: swe2server
+    volumes:
+      - swe2-data:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_DATABASE=swe2db
+    networks:
+      - swethanet
+
+networks:
+  swethanet:
+    driver: bridge
+
+volumes:
+  swe1-data:
+  swe2-data:

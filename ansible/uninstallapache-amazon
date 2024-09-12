@@ -1,0 +1,14 @@
+---
+- name: uninstall apache on amazon
+  hosts: amazon
+  become: yes
+  tasks:
+    - name: stop apache 
+      service:
+        name: httpd
+        state: stopped
+    - name: uninstall apache
+      yum:
+        name: httpd
+        state: absent
+     

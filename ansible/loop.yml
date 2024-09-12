@@ -1,0 +1,21 @@
+---
+- name: Install nginx in ubuntu
+  hosts: ubuntu
+  become: yes
+  vars: 
+    software_package_list:
+      - nginx
+      - default-jdk
+      - python3.11
+      - mysql-server
+      - apache2
+  tasks:
+    - name: Add deadsnakes PPA repository
+      apt_repository:
+        repo: ppa:deadsnakes/ppa
+        state: present
+    - name: install softwares
+      apt:
+        name: "{{ item }}" 
+        update_cache: yes
+      loop: "{{ software_package_list }}" 

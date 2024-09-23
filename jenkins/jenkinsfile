@@ -1,0 +1,20 @@
+pipeline {
+    agent any 
+    stages {
+        stage('show Jenkins Version') { 
+            steps {
+                sh 'jenkins --version'
+            }
+        }
+        stage('Show Docker version') { 
+            steps {
+                sh 'docker --version'
+            }
+        }
+        stage('Ansible version') { 
+            steps {
+               sh 'ansible --version'
+            }
+        }
+    }
+}

@@ -1,0 +1,29 @@
+pipeline{
+    agent any
+    environment {
+        GIT_REPO_URL = 'https://github.com/swethasethu84/swetha.git' //update repository
+        ANSIBLE_DIR = "/var/lib/jenkins/workspace/jen_ansible/ansible/" //update folder name
+    }
+    stages {
+    stage('Git pull') {
+        steps {
+         // Checkout the code from your Git repository and change the branch name
+            checkout([$class: 'GitSCM', branches: [[name: '*/test']], userRemoteConfigs: [[url: env.GIT_REPO_URL]]])
+         }
+        }
+        stage('Modify pem file permission') {
+        steps {
+             dir("${env.ANSIBLE_DIR}"){
+          sh "chmod 400 "swetha.pem"" //update your pem file name
+             }
+         }
+        }
+        stage('Execute the pipeline') {
+            steps {
+                dir("${env.ANSIBLE_DIR}") {
+                    sh "sudo ansible-playbook -i inventory uninstallapache.yml -b" //update playbook name
+                }
+            }
+        }
+}
+}

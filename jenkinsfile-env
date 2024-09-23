@@ -14,7 +14,7 @@ pipeline{
         stage('Modify pem file permission') {
         steps {
              dir("${env.ANSIBLE_DIR}"){
-          sh "chmod 400 "swetha.pem"" //update your pem file name
+          sh "sudo chmod 400 swetha.pem" //update your pem file name
              }
          }
         }

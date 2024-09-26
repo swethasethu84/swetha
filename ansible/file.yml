@@ -10,5 +10,5 @@
     - name: add content to the file
       lineinfile:
           path: /root/welcome.txt
-          line: Hello, Ansible!
+          line: Hi, Ansible!
           state: present

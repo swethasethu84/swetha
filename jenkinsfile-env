@@ -4,6 +4,9 @@ pipeline{
         GIT_REPO_URL = 'https://github.com/swethasethu84/swetha.git' //update repository
         ANSIBLE_DIR = "/var/lib/jenkins/workspace/jen_ansible/ansible/" //update folder name
     }
+    parameters {
+        choice(name: 'Ansible_playbook', choices: ['nginx-install.yml','nginx-uninstall.yml'], description: 'Select playbook')
+    }
     stages {
     stage('Git pull') {
         steps {
@@ -21,7 +24,7 @@ pipeline{
         stage('Execute the pipeline') {
             steps {
                 dir("${env.ANSIBLE_DIR}") {
-                    sh "sudo ansible-playbook -i inventory uninstallapache.yml -b" //update playbook name
+                    sh "sudo ansible-playbook -i inventory ${params.Ansible_playbook} -b" //update playbook name
                 }
             }
         }

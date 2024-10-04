@@ -3,11 +3,11 @@ provider "aws" {
 }
 
 resource "aws_s3_bucket" "name" {
-    bucket = var.bucket-name
+    bucket = var.monday-bucket-name
 }
 
 resource "aws_s3_bucket_object_lock_configuration" "my_bucket_object_lock" {
-  bucket = var.bucket-name
+  bucket = var.monday-bucket-name
 
   rule {
     default_retention {

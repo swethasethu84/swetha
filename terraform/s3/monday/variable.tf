@@ -1,4 +1,4 @@
-variable "bucket-name" {
+variable "monday-bucket-name" {
     type = string
    default = "umesh-devops-bucket-tuesday"
 }

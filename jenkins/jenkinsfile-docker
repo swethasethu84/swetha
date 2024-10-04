@@ -1,0 +1,39 @@
+pipeline {
+  agent any
+  environment {
+        GIT_REPO_URL = 'https://github.com/umeshqtree/project.git' //update repository
+        docker_dir = "/var/lib/jenkins/workspace/${params.Pipeline_name}/docker/"
+    }
+  parameters {
+        string(name: "Pipeline_name", defaultValue: "", description: "enter pipeline name")
+    }
+  stages {
+    stage('Checkout SCM') {
+        steps {
+         // Checkout the code from your Git repository
+            checkout([$class: 'GitSCM', branches: [[name: '*/master']], userRemoteConfigs: [[url: env.GIT_REPO_URL]]])
+         }
+        }
+        stage('List docker container') {
+        steps {
+             dir("${env.docker_dir}"){
+               sh "sudo docker ps"
+             }
+         }
+        }
+        stage('Execute the docker-compose file') {
+            steps {
+                dir("${env.docker_dir}") {
+                    sh "sudo docker-compose up -d"
+                }
+            }
+        }
+        stage('After execution list containers') {
+            steps {
+                dir("${env.docker_dir}") {
+                    sh "sudo docker ps -a"
+              }
+            }
+        }
+}
+}

@@ -1,0 +1,2 @@
+[ubuntu]
+10.0.23.207 ansible_user=ubuntu ansible_ssh_private_key_file=swetha.pem

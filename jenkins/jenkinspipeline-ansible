@@ -1,0 +1,33 @@
+pipeline {
+  agent any
+  environment {
+        GIT_REPO_URL = 'https://github.com/umeshqtree/qtree.git' //update repository
+        ANSIBLE_DIR = "/var/lib/jenkins/workspace/ansible/ansible/"
+    }
+  parameters {
+        string(name: "Pipeline_name", defaultValue: "", description: "enter pipeline name")
+        choice(name: 'Ansible_playbook', choices: ['nginx-install.yml','nginx-uninstall.yml', 'reboot.yml','update-kernel.yml'], description: 'Select Terraform actions')
+    }
+  stages {
+    stage('Checkout SCM') {
+        steps {
+         // Checkout the code from your Git repository and change the branch name
+            checkout([$class: 'GitSCM', branches: [[name: '*/new']], userRemoteConfigs: [[url: env.GIT_REPO_URL]]])
+         }
+        }
+        stage('Modify pem file permission') {
+        steps {
+             dir("${env.ANSIBLE_DIR}"){
+          sh "sudo chmod 400 mumbai.pem" //update your pem file name
+             }
+         }
+        }
+        stage('Execute the pipeline') {
+            steps {
+                dir("${env.ANSIBLE_DIR}") {
+                    sh "sudo ansible-playbook -i hosts ${params.Ansible_playbook} -b"
+                }
+            }
+        }
+}
+}

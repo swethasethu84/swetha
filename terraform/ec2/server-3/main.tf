@@ -9,7 +9,8 @@ resource "aws_instance" "swetha" {
     associate_public_ip_address = var.associate_public_ip_address
     subnet_id = var.subnet_id 
     key_name = var.key_name
+    user_data= file("install-apache.sh")
     tags = {
-    Name = "swetha-server-11"
+    Name = "swetha-server-12"
     }  
 }
